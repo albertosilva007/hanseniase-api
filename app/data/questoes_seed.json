@@ -1,0 +1,548 @@
+[
+  {
+    "publico": "prof",
+    "tema": "Etiologia e transmissão",
+    "enunciado": "Qual é o principal agente etiológico da hanseníase?",
+    "opcoes": [
+      "Mycobacterium tuberculosis",
+      "Mycobacterium leprae",
+      "Treponema pallidum",
+      "Leishmania braziliensis"
+    ],
+    "correta": 1,
+    "explicacao": "O M. leprae é um bacilo álcool-ácido resistente, intracelular obrigatório, com tropismo por pele e células de Schwann dos nervos periféricos. O M. lepromatosis também foi descrito como agente, mas é bem menos frequente."
+  },
+  {
+    "publico": "prof",
+    "tema": "Etiologia e transmissão",
+    "enunciado": "Qual é a principal forma de transmissão da hanseníase?",
+    "opcoes": [
+      "Contato com objetos de uso pessoal do doente",
+      "Vias aéreas superiores, no convívio próximo e prolongado com pessoa com forma multibacilar sem tratamento",
+      "Picada de insetos vetores",
+      "Contato pontual com lesões de pele"
+    ],
+    "correta": 1,
+    "explicacao": "A transmissão ocorre principalmente por gotículas das vias aéreas superiores. O risco é maior entre contatos domiciliares de pessoas com formas multibacilares que ainda não iniciaram o tratamento."
+  },
+  {
+    "publico": "prof",
+    "tema": "Etiologia e transmissão",
+    "enunciado": "Qual é o período médio de incubação da hanseníase?",
+    "opcoes": [
+      "2 a 4 semanas",
+      "3 a 6 meses",
+      "2 a 7 anos",
+      "Mais de 20 anos, obrigatoriamente"
+    ],
+    "correta": 2,
+    "explicacao": "O período de incubação é longo, em média de 2 a 7 anos (com relatos de períodos mais curtos ou mais longos). Por isso os contatos devem ser acompanhados por vários anos."
+  },
+  {
+    "publico": "prof",
+    "tema": "Diagnóstico",
+    "enunciado": "Sobre o diagnóstico da hanseníase, é correto afirmar:",
+    "opcoes": [
+      "Depende obrigatoriamente de baciloscopia positiva",
+      "É essencialmente clínico e epidemiológico, baseado no exame dermatoneurológico",
+      "Exige biópsia de pele em todos os casos",
+      "Só pode ser feito por dermatologista em centro de referência"
+    ],
+    "correta": 1,
+    "explicacao": "O diagnóstico é clínico, pelo exame dermatoneurológico, e pode ser feito na Atenção Primária. A baciloscopia é complementar: um resultado negativo não exclui a doença."
+  },
+  {
+    "publico": "prof",
+    "tema": "Diagnóstico",
+    "enunciado": "Qual alternativa NÃO é um sinal cardinal da definição de caso de hanseníase?",
+    "opcoes": [
+      "Lesão de pele com alteração de sensibilidade térmica, dolorosa e/ou tátil",
+      "Espessamento de nervo periférico associado a alterações sensitivas, motoras e/ou autonômicas",
+      "Presença de bacilos na baciloscopia de raspado intradérmico ou na biópsia",
+      "Lesão de pele pruriginosa com sensibilidade preservada"
+    ],
+    "correta": 3,
+    "explicacao": "Basta um sinal cardinal para definir o caso: lesão com alteração de sensibilidade, espessamento neural com alteração de função ou baciloscopia/biópsia positiva. Prurido com sensibilidade normal sugere outros diagnósticos."
+  },
+  {
+    "publico": "prof",
+    "tema": "Diagnóstico",
+    "enunciado": "Qual instrumento é recomendado para avaliar a sensibilidade tátil de mãos e pés na avaliação neurológica simplificada?",
+    "opcoes": [
+      "Diapasão de 128 Hz",
+      "Monofilamentos de Semmes-Weinstein (estesiômetro)",
+      "Martelo de reflexos",
+      "Goniômetro"
+    ],
+    "correta": 1,
+    "explicacao": "O conjunto de monofilamentos de náilon gradua a perda de sensibilidade protetora em mãos e pés. A sensibilidade térmica pode ser testada com tubos de água quente e fria e a dolorosa com a ponta de uma agulha."
+  },
+  {
+    "publico": "prof",
+    "tema": "Diagnóstico",
+    "enunciado": "Quais nervos periféricos são mais frequentemente acometidos e devem ser palpados na avaliação?",
+    "opcoes": [
+      "Femoral, ciático e obturatório",
+      "Ulnar, mediano, radial, fibular comum e tibial posterior",
+      "Facial, trigêmeo e vago, apenas",
+      "Intercostais e frênico"
+    ],
+    "correta": 1,
+    "explicacao": "A palpação inclui ulnar, mediano, radial, fibular comum e tibial posterior, além do auricular magno. Nos nervos cranianos, o facial e o trigêmeo podem ser afetados, com risco ocular."
+  },
+  {
+    "publico": "prof",
+    "tema": "Classificação",
+    "enunciado": "Paciente com 4 lesões de pele e baciloscopia positiva. Qual a classificação operacional?",
+    "opcoes": [
+      "Paucibacilar, pelo número de lesões",
+      "Multibacilar",
+      "Indeterminada",
+      "Não é possível classificar sem biópsia"
+    ],
+    "correta": 1,
+    "explicacao": "Baciloscopia positiva classifica o caso como multibacilar, independentemente do número de lesões."
+  },
+  {
+    "publico": "prof",
+    "tema": "Classificação",
+    "enunciado": "Paciente com 7 lesões de pele e baciloscopia negativa. Qual a classificação operacional?",
+    "opcoes": [
+      "Paucibacilar, porque a baciloscopia é negativa",
+      "Multibacilar",
+      "Forma neural pura",
+      "Caso descartado"
+    ],
+    "correta": 1,
+    "explicacao": "Mais de 5 lesões de pele classifica o caso como multibacilar. Até 5 lesões, com baciloscopia negativa, é paucibacilar."
+  },
+  {
+    "publico": "prof",
+    "tema": "Classificação",
+    "enunciado": "Na classificação de Madri, qual forma clínica se apresenta como mancha hipocrômica de bordas imprecisas, com alteração de sensibilidade e baciloscopia negativa?",
+    "opcoes": [
+      "Indeterminada",
+      "Tuberculoide",
+      "Dimorfa",
+      "Virchowiana"
+    ],
+    "correta": 0,
+    "explicacao": "A forma indeterminada é a manifestação inicial. Sem tratamento pode evoluir para os polos tuberculoide ou virchowiano, conforme a resposta imune do paciente."
+  },
+  {
+    "publico": "prof",
+    "tema": "Classificação",
+    "enunciado": "Infiltração difusa da pele, madarose, nódulos e baciloscopia fortemente positiva caracterizam qual forma?",
+    "opcoes": [
+      "Indeterminada",
+      "Tuberculoide",
+      "Virchowiana",
+      "Neural pura"
+    ],
+    "correta": 2,
+    "explicacao": "A forma virchowiana corresponde ao polo de baixa resposta imune celular, com alta carga bacilar. É a forma de maior importância na transmissão quando não tratada."
+  },
+  {
+    "publico": "prof",
+    "tema": "Tratamento",
+    "enunciado": "Qual é o esquema terapêutico atualmente padronizado no SUS para casos paucibacilares e multibacilares?",
+    "opcoes": [
+      "Rifampicina + dapsona para PB e PQT com clofazimina só para MB",
+      "PQT-U: rifampicina + dapsona + clofazimina para PB e MB",
+      "Isoniazida + rifampicina + pirazinamida",
+      "Monoterapia com dapsona por 2 anos"
+    ],
+    "correta": 1,
+    "explicacao": "Desde 2021 o SUS adota a poliquimioterapia única (PQT-U), com os três fármacos para PB e MB. O que muda entre as classificações é a duração."
+  },
+  {
+    "publico": "prof",
+    "tema": "Tratamento",
+    "enunciado": "Qual a duração do tratamento com PQT-U em casos paucibacilares?",
+    "opcoes": [
+      "3 doses em até 6 meses",
+      "6 doses em até 9 meses",
+      "12 doses em até 18 meses",
+      "24 doses em até 36 meses"
+    ],
+    "correta": 1,
+    "explicacao": "PB: 6 doses mensais supervisionadas, concluídas em até 9 meses."
+  },
+  {
+    "publico": "prof",
+    "tema": "Tratamento",
+    "enunciado": "Qual a duração do tratamento com PQT-U em casos multibacilares?",
+    "opcoes": [
+      "6 doses em até 9 meses",
+      "9 doses em até 12 meses",
+      "12 doses em até 18 meses",
+      "24 doses em até 24 meses"
+    ],
+    "correta": 2,
+    "explicacao": "MB: 12 doses mensais supervisionadas, concluídas em até 18 meses."
+  },
+  {
+    "publico": "prof",
+    "tema": "Tratamento",
+    "enunciado": "Qual é a dose mensal supervisionada da PQT-U para adultos?",
+    "opcoes": [
+      "Rifampicina 300 mg + clofazimina 50 mg + dapsona 50 mg",
+      "Rifampicina 600 mg + clofazimina 300 mg + dapsona 100 mg",
+      "Rifampicina 600 mg + clofazimina 100 mg + dapsona 300 mg",
+      "Rifampicina 450 mg + dapsona 100 mg"
+    ],
+    "correta": 1,
+    "explicacao": "Dose mensal supervisionada (adulto): rifampicina 600 mg, clofazimina 300 mg e dapsona 100 mg. Dose diária autoadministrada: clofazimina 50 mg e dapsona 100 mg. Em crianças, as doses seguem o peso e a cartela infantil."
+  },
+  {
+    "publico": "prof",
+    "tema": "Tratamento",
+    "enunciado": "Paciente em uso de PQT-U apresenta palidez, cansaço e cianose de lábios. Qual fármaco é o mais provável responsável?",
+    "opcoes": [
+      "Rifampicina",
+      "Clofazimina",
+      "Dapsona",
+      "Nenhum, são sinais da própria doença"
+    ],
+    "correta": 2,
+    "explicacao": "A dapsona pode causar anemia hemolítica e metemoglobinemia, com risco maior na deficiência de G6PD. O caso exige avaliação e, se confirmado, substituição do fármaco pelo esquema alternativo."
+  },
+  {
+    "publico": "prof",
+    "tema": "Tratamento",
+    "enunciado": "Qual efeito adverso é esperado com a clofazimina e deve ser explicado ao paciente desde o início?",
+    "opcoes": [
+      "Hiperpigmentação da pele, reversível após o fim do tratamento",
+      "Perda auditiva permanente",
+      "Hepatite fulminante na maioria dos casos",
+      "Queda definitiva de cabelo"
+    ],
+    "correta": 0,
+    "explicacao": "A clofazimina causa coloração avermelhada a acastanhada da pele e ressecamento. A orientação prévia reduz o abandono, porque o efeito regride gradualmente após o término."
+  },
+  {
+    "publico": "prof",
+    "tema": "Reações hansênicas",
+    "enunciado": "Paciente em PQT apresenta piora súbita de lesões antigas, com eritema e edema, e dor em nervo ulnar. Qual o diagnóstico mais provável?",
+    "opcoes": [
+      "Falha terapêutica",
+      "Reação hansênica tipo 1 (reação reversa)",
+      "Eritema nodoso hansênico",
+      "Alergia à rifampicina"
+    ],
+    "correta": 1,
+    "explicacao": "A reação tipo 1 é inflamatória e mediada por imunidade celular: lesões que se tornam eritematosas e edemaciadas, novas lesões e neurite. O tratamento de escolha é a prednisona, em geral 1 mg/kg/dia, com redução gradual."
+  },
+  {
+    "publico": "prof",
+    "tema": "Reações hansênicas",
+    "enunciado": "Nódulos subcutâneos dolorosos e avermelhados, febre e mal-estar em paciente multibacilar sugerem:",
+    "opcoes": [
+      "Reação tipo 1",
+      "Reação tipo 2 (eritema nodoso hansênico)",
+      "Recidiva por resistência",
+      "Infecção bacteriana secundária, sempre"
+    ],
+    "correta": 1,
+    "explicacao": "O eritema nodoso hansênico (reação tipo 2) é sistêmico, ocorre em formas MB e pode acometer nervos, olhos, articulações e testículos."
+  },
+  {
+    "publico": "prof",
+    "tema": "Reações hansênicas",
+    "enunciado": "Durante uma reação hansênica em paciente que ainda está em PQT, qual a conduta em relação à poliquimioterapia?",
+    "opcoes": [
+      "Suspender a PQT até a reação passar",
+      "Manter a PQT e tratar a reação",
+      "Reiniciar o esquema do zero",
+      "Trocar para esquema de segunda linha"
+    ],
+    "correta": 1,
+    "explicacao": "Reação não é falha nem alergia ao tratamento. A PQT é mantida e a reação é tratada em paralelo."
+  },
+  {
+    "publico": "prof",
+    "tema": "Reações hansênicas",
+    "enunciado": "Mulher de 25 anos, sem uso de contraceptivo, apresenta eritema nodoso hansênico. Qual a conduta adequada?",
+    "opcoes": [
+      "Talidomida 100 a 400 mg/dia",
+      "Corticosteroide (prednisona), pois a talidomida é contraindicada nessa situação",
+      "Suspender a PQT",
+      "Apenas analgésico"
+    ],
+    "correta": 1,
+    "explicacao": "A talidomida é teratogênica. Em mulheres em idade fértil seu uso exige dois métodos contraceptivos e segue as regras da Lei 10.651/2003. Sem essas condições, usa-se corticosteroide."
+  },
+  {
+    "publico": "prof",
+    "tema": "Incapacidades",
+    "enunciado": "No grau de incapacidade física (GIF), o que caracteriza o grau 2?",
+    "opcoes": [
+      "Ausência de qualquer alteração",
+      "Diminuição ou perda de sensibilidade, sem deformidade visível",
+      "Deformidades visíveis, como garras, reabsorção, úlceras, lagoftalmo ou pé caído",
+      "Apenas dor neural"
+    ],
+    "correta": 2,
+    "explicacao": "Grau 0: sem alterações. Grau 1: perda de sensibilidade protetora sem deformidade visível. Grau 2: deformidades visíveis. O GIF é avaliado no diagnóstico e na alta. Grau 2 no diagnóstico indica detecção tardia."
+  },
+  {
+    "publico": "prof",
+    "tema": "Vigilância",
+    "enunciado": "Qual a conduta com contatos domiciliares de um caso novo, sem sinais da doença ao exame?",
+    "opcoes": [
+      "Nenhuma, se assintomáticos",
+      "Exame dermatoneurológico e vacina BCG conforme a cicatriz vacinal (dose se não tiverem cicatriz ou tiverem apenas uma)",
+      "Iniciar PQT-U completa",
+      "Isolamento por 30 dias"
+    ],
+    "correta": 1,
+    "explicacao": "Todo contato deve ser examinado e orientado a retornar se surgirem sinais. Sem sinais da doença, aplica-se a BCG conforme a avaliação da cicatriz vacinal."
+  },
+  {
+    "publico": "prof",
+    "tema": "Vigilância",
+    "enunciado": "Qual o papel do teste rápido para anticorpos IgM anti-PGL-I no SUS?",
+    "opcoes": [
+      "Confirmar sozinho o diagnóstico de hanseníase",
+      "Apoiar a avaliação de contatos, identificando quem precisa de seguimento mais próximo",
+      "Definir a alta por cura",
+      "Substituir o exame dermatoneurológico"
+    ],
+    "correta": 1,
+    "explicacao": "O teste indica exposição/infecção pelo M. leprae e auxilia a vigilância de contatos. Resultado positivo não fecha diagnóstico; o diagnóstico continua sendo clínico."
+  },
+  {
+    "publico": "prof",
+    "tema": "Vigilância",
+    "enunciado": "Sobre a notificação da hanseníase, é correto afirmar:",
+    "opcoes": [
+      "É facultativa",
+      "É compulsória, com registro na ficha do SINAN",
+      "Só é feita em casos com incapacidade",
+      "É feita apenas na alta"
+    ],
+    "correta": 1,
+    "explicacao": "A hanseníase é doença de notificação compulsória. O acompanhamento mensal e a alta também devem ser atualizados no sistema."
+  },
+  {
+    "publico": "pac",
+    "tema": "Sinais e sintomas",
+    "enunciado": "Hanseníase tem cura?",
+    "opcoes": [
+      "Não, só tem controle",
+      "Sim, e o tratamento é gratuito no SUS",
+      "Só em crianças",
+      "Só se for descoberta no primeiro mês"
+    ],
+    "correta": 1,
+    "explicacao": "Hanseníase tem cura. O tratamento é feito com remédios gratuitos, distribuídos na Unidade Básica de Saúde. Quanto mais cedo começa, menor o risco de sequelas."
+  },
+  {
+    "publico": "pac",
+    "tema": "Sinais e sintomas",
+    "enunciado": "Qual é o sinal mais comum da hanseníase?",
+    "opcoes": [
+      "Febre alta todos os dias",
+      "Manchas na pele com dormência (perda de sensibilidade ao calor, ao frio, à dor ou ao toque)",
+      "Coceira forte no corpo todo",
+      "Tosse com catarro"
+    ],
+    "correta": 1,
+    "explicacao": "As manchas podem ser mais claras, avermelhadas ou acastanhadas. O que chama atenção é a dormência: a pessoa não sente direito quando encosta algo quente ou quando se machuca no local."
+  },
+  {
+    "publico": "pac",
+    "tema": "Sinais e sintomas",
+    "enunciado": "Além das manchas, que outros sinais podem indicar hanseníase?",
+    "opcoes": [
+      "Formigamento, choques, câimbras e perda de força nas mãos e nos pés",
+      "Dor de dente",
+      "Queda de cabelo apenas na cabeça",
+      "Manchas que somem em poucos dias"
+    ],
+    "correta": 0,
+    "explicacao": "A hanseníase afeta os nervos. Formigamento, sensação de choque, dor nos cotovelos ou joelhos, perda de força e caroços no corpo também devem ser avaliados na unidade de saúde."
+  },
+  {
+    "publico": "pac",
+    "tema": "Transmissão",
+    "enunciado": "Como a hanseníase passa de uma pessoa para outra?",
+    "opcoes": [
+      "Pelo abraço, aperto de mão ou uso dos mesmos talheres",
+      "Pelo ar, no convívio próximo e por muito tempo com uma pessoa doente que ainda não está tratando",
+      "Por picada de mosquito",
+      "Pelo sangue"
+    ],
+    "correta": 1,
+    "explicacao": "A transmissão acontece pelas vias respiratórias (fala, tosse, espirro), em convivência próxima e prolongada. Objetos, roupas, pratos e toque na pele não transmitem a doença."
+  },
+  {
+    "publico": "pac",
+    "tema": "Transmissão",
+    "enunciado": "Depois que a pessoa começa o tratamento, ela ainda transmite a doença?",
+    "opcoes": [
+      "Sim, até o fim do tratamento",
+      "Não, ela deixa de transmitir logo no início do tratamento",
+      "Sim, por toda a vida",
+      "Só deixa de transmitir depois de 1 ano"
+    ],
+    "correta": 1,
+    "explicacao": "Os remédios eliminam rapidamente a capacidade de transmitir. Por isso começar o tratamento cedo protege a família e a comunidade."
+  },
+  {
+    "publico": "pac",
+    "tema": "Convivência",
+    "enunciado": "Quem tem hanseníase precisa ficar isolado da família?",
+    "opcoes": [
+      "Sim, em quarto separado",
+      "Não. Pode conviver, trabalhar, estudar e abraçar normalmente",
+      "Só precisa usar talheres separados",
+      "Precisa ser internado"
+    ],
+    "correta": 1,
+    "explicacao": "Não há motivo para isolamento. Separar pratos, roupas ou afastar a pessoa só aumenta o preconceito e não protege ninguém."
+  },
+  {
+    "publico": "pac",
+    "tema": "Convivência",
+    "enunciado": "Os familiares de quem recebeu o diagnóstico devem:",
+    "opcoes": [
+      "Esperar aparecer algum sintoma",
+      "Ir à unidade de saúde para exame, mesmo sem sintomas",
+      "Tomar os mesmos remédios por conta própria",
+      "Evitar a pessoa doente"
+    ],
+    "correta": 1,
+    "explicacao": "Quem mora junto ou convive de perto deve ser examinado. Na unidade, os familiares também podem receber a vacina BCG, conforme a avaliação."
+  },
+  {
+    "publico": "pac",
+    "tema": "Convivência",
+    "enunciado": "Por que hoje usamos a palavra 'hanseníase'?",
+    "opcoes": [
+      "Porque é o nome de outra doença",
+      "Porque uma lei substituiu o termo antigo, carregado de preconceito",
+      "Porque a doença mudou",
+      "Por ser mais curta"
+    ],
+    "correta": 1,
+    "explicacao": "A Lei 9.010/1995 determinou o uso do termo hanseníase em documentos oficiais. A troca ajuda a combater o estigma que afastava as pessoas do diagnóstico."
+  },
+  {
+    "publico": "pac",
+    "tema": "Tratamento",
+    "enunciado": "Onde a pessoa com hanseníase recebe o tratamento?",
+    "opcoes": [
+      "Só em hospitais particulares",
+      "Na Unidade Básica de Saúde (posto de saúde), de graça",
+      "Em farmácias, com receita comprada",
+      "Apenas em capitais"
+    ],
+    "correta": 1,
+    "explicacao": "O diagnóstico e o tratamento são feitos na Atenção Básica. Casos mais complexos são encaminhados para serviços de referência."
+  },
+  {
+    "publico": "pac",
+    "tema": "Tratamento",
+    "enunciado": "Como devem ser tomados os remédios da hanseníase?",
+    "opcoes": [
+      "Só quando a mancha incomodar",
+      "Todos os dias, com uma dose mensal tomada na unidade de saúde, sem interromper",
+      "Uma vez por semana",
+      "Até a mancha sumir"
+    ],
+    "correta": 1,
+    "explicacao": "O tratamento dura de 6 a 12 meses, conforme o caso. Uma vez por mês a dose é tomada na frente da equipe de saúde, e nos outros dias em casa. Parar antes do fim pode trazer a doença de volta."
+  },
+  {
+    "publico": "pac",
+    "tema": "Tratamento",
+    "enunciado": "Durante o tratamento, a urina ficou avermelhada. O que fazer?",
+    "opcoes": [
+      "Parar o remédio imediatamente",
+      "Continuar: é efeito esperado de um dos remédios (rifampicina)",
+      "Ir à emergência",
+      "Beber menos água"
+    ],
+    "correta": 1,
+    "explicacao": "A cor avermelhada da urina aparece no dia da dose mensal e não faz mal. Febre, pele ou olhos amarelados, falta de ar ou lábios arroxeados, porém, devem ser avisados à equipe."
+  },
+  {
+    "publico": "pac",
+    "tema": "Tratamento",
+    "enunciado": "A pele ficou mais escura durante o tratamento. Isso é grave?",
+    "opcoes": [
+      "Sim, o tratamento precisa parar",
+      "Não. É efeito de um dos remédios (clofazimina) e melhora aos poucos depois do fim do tratamento",
+      "É sinal de que a doença piorou",
+      "É alergia"
+    ],
+    "correta": 1,
+    "explicacao": "O escurecimento e o ressecamento da pele são esperados. Hidratar a pele ajuda. Fale com a equipe se isso estiver incomodando; não abandone o tratamento."
+  },
+  {
+    "publico": "pac",
+    "tema": "Tratamento",
+    "enunciado": "Gestante ou mulher que amamenta pode fazer o tratamento da hanseníase?",
+    "opcoes": [
+      "Não, deve esperar o bebê nascer",
+      "Sim, o tratamento pode ser feito na gravidez e na amamentação, com acompanhamento",
+      "Só depois de parar de amamentar",
+      "Só com internação"
+    ],
+    "correta": 1,
+    "explicacao": "Os remédios da poliquimioterapia podem ser usados na gestação e na amamentação. Adiar o tratamento traz mais riscos para mãe e bebê."
+  },
+  {
+    "publico": "pac",
+    "tema": "Autocuidado",
+    "enunciado": "Quais cuidados ajudam a proteger mãos e pés com dormência?",
+    "opcoes": [
+      "Andar descalço para fortalecer a pele",
+      "Olhar mãos e pés todo dia, hidratar a pele, usar calçado fechado e confortável e proteger as mãos do calor",
+      "Furar bolhas e calos em casa",
+      "Não há o que fazer"
+    ],
+    "correta": 1,
+    "explicacao": "Sem sensibilidade, a pessoa pode se queimar ou se ferir sem perceber. O autocuidado diário evita feridas e deformidades. Use luva ou pano para segurar panelas."
+  },
+  {
+    "publico": "pac",
+    "tema": "Autocuidado",
+    "enunciado": "Os olhos estão ressecados e a pessoa pisca pouco. O que é recomendado?",
+    "opcoes": [
+      "Ignorar, é normal",
+      "Usar colírio lubrificante indicado pela equipe, proteger os olhos do vento e da poeira e procurar avaliação",
+      "Esfregar os olhos",
+      "Usar remédio caseiro nos olhos"
+    ],
+    "correta": 1,
+    "explicacao": "A hanseníase pode afetar os nervos do rosto e diminuir a proteção dos olhos. Olhos vermelhos, dor ou dificuldade de fechar as pálpebras devem ser avaliados logo."
+  },
+  {
+    "publico": "pac",
+    "tema": "Autocuidado",
+    "enunciado": "Depois da alta, surgiram dor nos nervos e manchas avermelhadas inchadas. O que fazer?",
+    "opcoes": [
+      "Achar que a doença voltou e se desesperar",
+      "Procurar logo a unidade de saúde: pode ser uma reação, que tem tratamento",
+      "Tomar o remédio que sobrou",
+      "Esperar passar sozinho"
+    ],
+    "correta": 1,
+    "explicacao": "As reações hansênicas podem acontecer antes, durante ou depois do tratamento. Tratadas a tempo, evitam danos aos nervos. Não é motivo de vergonha nem de abandono do acompanhamento."
+  },
+  {
+    "publico": "pac",
+    "tema": "Sinais e sintomas",
+    "enunciado": "O que é o Janeiro Roxo?",
+    "opcoes": [
+      "Campanha de vacinação contra gripe",
+      "Campanha de conscientização sobre a hanseníase",
+      "Campanha sobre saúde do coração",
+      "Campanha contra a dengue"
+    ],
+    "correta": 1,
+    "explicacao": "Em janeiro acontecem ações de informação, busca de casos e combate ao preconceito. O Dia Mundial de Luta contra a Hanseníase é celebrado no último domingo de janeiro."
+  }
+]

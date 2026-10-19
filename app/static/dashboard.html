@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dashboard · Questões de Hanseníase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="/static/app.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+.head{display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between;padding-block:24px 8px}
+.head h1{margin:0;font-size:clamp(1.6rem,4vw,2.2rem)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding-block:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi span{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.kpi b{display:block;font-family:var(--f-display);font-size:2rem;line-height:1.2;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:3fr 2fr;gap:12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.panel h2{font-size:1.05rem;margin:0 0 2px}
+.panel p.sub{margin:0 0 12px;font-size:.85rem;color:var(--muted)}
+.chart{position:relative;height:300px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%}
+.empty{padding:30px 0;text-align:center;color:var(--muted)}
+@media (max-width:860px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<nav class="topnav wrap wide">
+  <strong style="font-family:var(--f-display)">Hanseníase · Painel</strong>
+  <a href="/admin">Questões</a>
+  <a href="/dashboard" aria-current="page">Dashboard</a>
+  <a href="/" target="_blank" rel="noopener">Ver página pública</a>
+  <span class="sp"></span>
+  <button class="link" id="csv" type="button">Exportar respostas (CSV)</button>
+</nav>
+
+<main class="wrap wide" style="padding-bottom:48px">
+  <div class="head">
+    <div><div class="eyebrow">Desempenho</div><h1>Respostas registradas</h1></div>
+    <button class="btn ghost" id="atualizar" type="button">Atualizar</button>
+  </div>
+  <div id="erro" class="alert" hidden></div>
+  <section class="kpis">
+    <div class="kpi"><span>Respostas</span><b id="kR">–</b></div>
+    <div class="kpi"><span>Participantes</span><b id="kS">–</b></div>
+    <div class="kpi"><span>Taxa de acerto</span><b id="kT">–</b></div>
+    <div class="kpi"><span>Questões</span><b id="kQ">–</b></div>
+  </section>
+  <section class="grid">
+    <div class="panel"><h2>Acerto por tema</h2><p class="sub">Percentual de respostas corretas em cada tema</p><div class="chart"><canvas id="cTema"></canvas></div></div>
+    <div class="panel"><h2>Por público</h2><p class="sub">Respostas e acertos em cada trilha</p><div class="chart"><canvas id="cPub"></canvas></div></div>
+    <div class="panel" style="grid-column:1/-1"><h2>Respostas por dia</h2><p class="sub">Volume diário de respostas e acertos</p><div class="chart" style="height:240px"><canvas id="cDia"></canvas></div></div>
+    <div class="panel" style="grid-column:1/-1"><h2>Questões com menor acerto</h2><p class="sub">Ordenadas da mais difícil para a mais fácil, entre as que já têm respostas. Bom ponto de partida para revisar enunciados ou reforçar conteúdo.</p><div class="tbl" id="tbl"></div></div>
+  </section>
+</main>
+
+<script>
+const AUD = {prof:"Profissionais", pac:"Pacientes e comunidade"};
+const token = sessionStorage.getItem("hq-token");
+if(!token) location.href = "/admin";
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const css = n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const charts = {};
+const fmt = n=>n==null?"–":n.toLocaleString("pt-BR");
+const pct = n=>n==null?"–":n.toLocaleString("pt-BR",{maximumFractionDigits:1})+"%";
+
+async function get(path){
+  const r = await fetch(path,{headers:{Authorization:`Bearer ${token}`}});
+  if(r.status===401){ location.href="/admin"; throw 0; }
+  if(!r.ok) throw new Error("Não foi possível carregar as estatísticas.");
+  return r;
+}
+
+function chart(id, cfg){
+  charts[id]?.destroy();
+  const ink=css("--muted"), grid=css("--line");
+  Chart.defaults.font.family = css("--f-body"); Chart.defaults.color = ink;
+  cfg.options = Object.assign({responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12}}}}, cfg.options||{});
+  for(const ax of Object.values(cfg.options.scales||{})){ ax.grid = {color:grid}; ax.border = {color:grid}; }
+  charts[id] = new Chart(document.getElementById(id), cfg);
+}
+
+async function carregar(){
+  $("#erro").hidden=true;
+  try{
+    const s = await (await get("/api/admin/stats")).json();
+    $("#kR").textContent=fmt(s.total_respostas); $("#kS").textContent=fmt(s.sessoes);
+    $("#kT").textContent=pct(s.taxa_geral); $("#kQ").textContent=fmt(s.total_questoes);
+    const ok=css("--ok"), ac=css("--accent"), pac=css("--pac"), line=css("--line");
+
+    const temas = s.por_tema.filter(t=>t.respostas>0);
+    chart("cTema",{type:"bar",data:{labels:temas.map(t=>t.tema),datasets:[{label:"% de acerto",data:temas.map(t=>t.taxa),backgroundColor:ac,borderRadius:4}]},
+      options:{indexAxis:"y",plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${pct(c.raw)} (${temas[c.dataIndex].acertos}/${temas[c.dataIndex].respostas})`}}},scales:{x:{min:0,max:100,ticks:{callback:v=>v+"%"}},y:{}}}});
+
+    chart("cPub",{type:"bar",data:{labels:s.por_publico.map(p=>AUD[p.publico]),datasets:[
+      {label:"Respostas",data:s.por_publico.map(p=>p.respostas),backgroundColor:line,borderColor:css("--muted"),borderWidth:1,borderRadius:4},
+      {label:"Acertos",data:s.por_publico.map(p=>p.acertos),backgroundColor:ok,borderRadius:4}]},
+      options:{scales:{x:{},y:{beginAtZero:true,ticks:{precision:0}}}}});
+
+    chart("cDia",{type:"line",data:{labels:s.por_dia.map(d=>d.dia.split("-").reverse().slice(0,2).join("/")),datasets:[
+      {label:"Respostas",data:s.por_dia.map(d=>d.respostas),borderColor:ac,backgroundColor:ac+"22",fill:true,tension:.3,pointRadius:3},
+      {label:"Acertos",data:s.por_dia.map(d=>d.acertos),borderColor:ok,tension:.3,pointRadius:3}]},
+      options:{scales:{x:{},y:{beginAtZero:true,ticks:{precision:0}}}}});
+
+    const qs = s.por_questao.filter(q=>q.respostas>0).sort((a,b)=>a.taxa-b.taxa);
+    $("#tbl").innerHTML = qs.length ? `<table><thead><tr><th>#</th><th>Questão</th><th>Público</th><th class="n">Respostas</th><th class="n">Acerto</th><th></th></tr></thead><tbody>${
+      qs.map(q=>{const c=q.taxa<50?css("--bad"):q.taxa<75?css("--accent"):css("--ok");
+        return `<tr><td class="n">${q.id}</td><td>${esc(q.enunciado)}<div class="muted" style="font-size:.8rem">${esc(q.tema)}</div></td><td><span class="chip ${q.publico}">${q.publico==="prof"?"Prof.":"Pac."}</span></td><td class="n">${q.respostas}</td><td class="n">${pct(q.taxa)}</td><td><div class="bar"><i style="width:${q.taxa}%;background:${c}"></i></div></td></tr>`}).join("")
+      }</tbody></table>` : '<p class="empty">Ainda não há respostas registradas. Elas aparecem aqui assim que alguém responder na página pública.</p>';
+  }catch(e){ if(e){ $("#erro").textContent=e.message; $("#erro").hidden=false; } }
+}
+
+$("#atualizar").onclick=carregar;
+$("#csv").onclick=async()=>{
+  try{ const b = await (await get("/api/admin/respostas.csv")).blob();
+    const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="respostas_hanseniase.csv"; a.click(); URL.revokeObjectURL(a.href);
+  }catch(e){ if(e){ $("#erro").textContent="Não foi possível exportar o CSV."; $("#erro").hidden=false; } }
+};
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",carregar);
+carregar();
+</script>
+</body>
+</html>

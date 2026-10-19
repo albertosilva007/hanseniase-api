@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Questões de Hanseníase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="/static/app.css">
+<style>
+header.top{padding-block:40px 24px}
+.lede{color:var(--muted);max-width:62ch;margin:0}.lede strong{color:var(--ink)}
+.bar{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.bar .wrap{padding-block:12px;display:flex;flex-direction:column;gap:10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--bg);flex-wrap:wrap}
+.seg button{font:inherit;font-size:.9rem;border:0;background:transparent;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);font-weight:700}
+#busca{flex:1 1 180px;min-width:0}
+.score{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.score b{color:var(--ink)}
+.meter{flex:1 1 120px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;min-width:80px}
+.meter i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+main{padding-block:24px 48px;display:flex;flex-direction:column;gap:18px}
+.count{font-size:.88rem;color:var(--muted);margin:0}
+article.q{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:14px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tema{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.num{margin-left:auto;color:var(--muted);font-family:var(--f-display);font-variant-numeric:tabular-nums}
+.q h2{font-weight:700;font-size:1.14rem;line-height:1.38;margin:0;text-wrap:pretty}
+.opts{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.opt{width:100%;display:flex;gap:12px;align-items:flex-start;text-align:left;font:inherit;font-size:.98rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;transition:border-color .15s}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt .l{flex:none;width:1.7em;height:1.7em;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.opt span:last-child{min-width:0}
+.opt.right{background:var(--ok-soft);border-color:var(--ok)}.opt.right .l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}.opt.wrong .l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opt.dim{opacity:.6}
+.exp{border-top:1px dashed var(--line);padding-top:12px;font-size:.95rem}
+.exp b{display:block}.exp .ok{color:var(--ok)}.exp .bad{color:var(--bad)}.exp .neutral{color:var(--accent)}
+.exp p{margin:0}
+.empty{text-align:center;color:var(--muted);padding:40px 0}
+footer{border-top:1px solid var(--line);padding-block:20px 40px;color:var(--muted);font-size:.86rem}
+footer p{margin:0 0 6px;max-width:68ch}
+@media (max-width:520px){article.q{padding:16px 14px}.seg button{padding:6px 11px}}
+</style>
+</head>
+<body>
+<header class="top wrap">
+  <div class="eyebrow">Banco de questões · leitura online</div>
+  <h1>Hanseníase: perguntas para quem cuida e para quem convive</h1>
+  <p class="lede">Questões com gabarito comentado, em duas trilhas: <strong>profissionais de saúde</strong> e <strong>pacientes e comunidade</strong>. Use <strong>Praticar</strong> para responder ou <strong>Leitura</strong> para ver tudo com as respostas.</p>
+</header>
+
+<div class="bar"><div class="wrap">
+  <div class="row">
+    <div class="seg" role="group" aria-label="Público">
+      <button type="button" data-aud="" aria-pressed="true">Todos</button>
+      <button type="button" data-aud="prof" aria-pressed="false">Profissionais</button>
+      <button type="button" data-aud="pac" aria-pressed="false">Pacientes e comunidade</button>
+    </div>
+    <div class="seg" role="group" aria-label="Modo">
+      <button type="button" data-mode="quiz" aria-pressed="true">Praticar</button>
+      <button type="button" data-mode="read" aria-pressed="false">Leitura</button>
+    </div>
+  </div>
+  <div class="row">
+    <select id="tema" aria-label="Tema"><option value="">Todos os temas</option></select>
+    <input id="busca" type="search" placeholder="Buscar: dapsona, manchas, contatos…" aria-label="Buscar questões">
+  </div>
+  <div class="score" id="score"></div>
+</div></div>
+
+<main class="wrap" id="lista" aria-live="polite"><p class="empty">Carregando questões…</p></main>
+
+<footer class="wrap">
+  <p>Conteúdo educativo baseado no PCDT da Hanseníase (Ministério da Saúde, 2022) e no Guia Prático sobre a Hanseníase (MS, 2017). Não substitui a avaliação de um profissional de saúde.</p>
+  <p>Hanseníase tem cura, e o tratamento é gratuito no SUS. Em caso de manchas com dormência, procure a Unidade Básica de Saúde mais próxima.</p>
+</footer>
+
+<script>
+const API = "";  // mesma origem; troque pela URL da API se hospedar o front em outro lugar
+const L = "ABCDEF";
+const AUD = {prof:"Profissionais", pac:"Pacientes e comunidade"};
+const ls = {get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const st = {aud:"", mode:ls.get("hq-mode","quiz"), tema:"", busca:"", lista:[], ans:ls.get("hq-ans",{})};
+let sessao = ls.get("hq-sessao", null);
+if(!sessao){ sessao = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())+Math.random().toString(16).slice(2)); ls.set("hq-sessao", sessao); }
+
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+async function carregar(){
+  const p = new URLSearchParams();
+  if(st.aud) p.set("publico", st.aud);
+  if(st.tema) p.set("tema", st.tema);
+  if(st.busca.trim()) p.set("busca", st.busca.trim());
+  if(st.mode==="read") p.set("gabarito","true");
+  try{
+    const [qs, ts] = await Promise.all([
+      fetch(`${API}/api/questoes?${p}`).then(r=>r.json()),
+      fetch(`${API}/api/temas${st.aud?`?publico=${st.aud}`:""}`).then(r=>r.json())
+    ]);
+    st.lista = qs;
+    if(st.tema && !ts.includes(st.tema)) st.tema = "";
+    $("#tema").innerHTML = '<option value="">Todos os temas</option>' + ts.map(t=>`<option${t===st.tema?" selected":""}>${esc(t)}</option>`).join("");
+    render();
+  }catch(e){ $("#lista").innerHTML = '<p class="empty">Não foi possível carregar as questões. Verifique a conexão e recarregue a página.</p>'; }
+}
+
+function card(q,n){
+  const read = st.mode==="read", a = st.ans[q.id], done = read || a;
+  const correta = read ? q.correta : a?.correta;
+  const opts = q.opcoes.map((t,i)=>{
+    let c="opt"; if(done){ if(i===correta) c+=" right"; else if(!read && i===a.escolha) c+=" wrong"; else c+=" dim"; }
+    return `<li><button type="button" class="${c}" data-q="${q.id}" data-i="${i}"${done?" disabled":""}><span class="l">${L[i]}</span><span>${esc(t)}</span></button></li>`;
+  }).join("");
+  let exp="";
+  if(done){
+    const v = read ? `<b class="neutral">Resposta: ${L[correta]}</b>` : a.escolha===correta ? `<b class="ok">Correto.</b>` : `<b class="bad">Resposta certa: ${L[correta]}</b>`;
+    exp = `<div class="exp">${v}<p>${esc(read?q.explicacao:a.explicacao)}</p></div>`;
+  }
+  return `<article class="q"><div class="meta"><span class="chip ${q.publico}">${AUD[q.publico]}</span><span class="tema">${esc(q.tema)}</span><span class="num">${String(n).padStart(2,"0")}</span></div><h2>${esc(q.enunciado)}</h2><ol class="opts">${opts}</ol>${exp}</article>`;
+}
+
+function render(){
+  document.querySelectorAll("[data-aud]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.aud===st.aud));
+  document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.mode===st.mode));
+  const v = st.lista;
+  $("#lista").innerHTML = v.length ? `<p class="count">${v.length} ${v.length===1?"questão":"questões"}</p>` + v.map((q,i)=>card(q,i+1)).join("")
+    : '<p class="empty">Nenhuma questão encontrada. Tente outro termo ou limpe os filtros.</p>';
+  const sc = $("#score");
+  if(st.mode==="read"){ sc.textContent = "Modo leitura: respostas e comentários visíveis."; return; }
+  const resp = v.filter(q=>st.ans[q.id]); const ok = resp.filter(q=>st.ans[q.id].escolha===st.ans[q.id].correta).length;
+  sc.innerHTML = `<span><b>${ok}</b> acertos em <b>${resp.length}</b> de ${v.length} respondidas</span><span class="meter" aria-hidden="true"><i style="width:${v.length?ok/v.length*100:0}%"></i></span>` + (resp.length?'<button type="button" class="link" id="reset">Recomeçar</button>':"");
+}
+
+async function responder(qid, escolha, btn){
+  btn.closest(".opts").querySelectorAll("button").forEach(b=>b.disabled=true);
+  try{
+    const r = await fetch(`${API}/api/respostas`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({questao_id:qid, escolha, sessao})});
+    if(!r.ok) throw 0;
+    const c = await r.json();
+    st.ans[qid] = {escolha, correta:c.correta, explicacao:c.explicacao}; ls.set("hq-ans", st.ans);
+  }catch(e){ alert("Não foi possível enviar a resposta. Tente de novo."); }
+  render();
+}
+
+let t;
+document.addEventListener("click", e=>{
+  const o = e.target.closest(".opt"); if(o && !o.disabled){ responder(+o.dataset.q, +o.dataset.i, o); return; }
+  const a = e.target.closest("[data-aud]"); if(a){ st.aud = a.dataset.aud; carregar(); return; }
+  const m = e.target.closest("[data-mode]"); if(m){ st.mode = m.dataset.mode; ls.set("hq-mode", st.mode); carregar(); return; }
+  if(e.target.id==="reset"){ st.lista.forEach(q=>delete st.ans[q.id]); ls.set("hq-ans", st.ans); render(); }
+});
+$("#tema").addEventListener("change", e=>{ st.tema = e.target.value; carregar(); });
+$("#busca").addEventListener("input", e=>{ st.busca = e.target.value; clearTimeout(t); t = setTimeout(carregar, 300); });
+carregar();
+</script>
+</body>
+</html>
