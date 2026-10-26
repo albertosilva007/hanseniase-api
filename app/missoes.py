@@ -13,13 +13,13 @@ Os textos de narrativa são placeholders: a equipe revisa e edita depois.
 """
 from collections import defaultdict
 
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.orm import Session
 
 from .models import Missao, MissaoEtapa, ProgressoMissao, Questao, Trilha
 
 TAM_MAX = 4
-PCT_MISSAO = 0.7
+PCT_MISSAO = 0.6  # 2 de 3 e 3 de 4 passam; 2 de 4 não
 PCT_CHEFE = 0.8
 XP_MISSAO = 50
 XP_CHEFE = 150
@@ -42,6 +42,14 @@ def _ordena_temas(publico: str, temas: list[str]) -> list[str]:
     conhecidos = [t for t in base if t in temas]
     novos = sorted(t for t in temas if t not in base)
     return conhecidos + novos
+
+
+def ajusta_pct_minimo(db: Session) -> int:
+    """Missões geradas com o mínimo antigo (70%) passam para PCT_MISSAO. Roda na subida; é idempotente."""
+    n = db.execute(update(Missao).where(Missao.tipo == "quiz", Missao.pct_minimo == 0.7)
+                   .values(pct_minimo=PCT_MISSAO)).rowcount
+    db.commit()
+    return n
 
 
 def gera_missoes(db: Session, recriar: bool = False) -> dict:

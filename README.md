@@ -63,7 +63,7 @@ Trilha (1 por público: "Jornada do Profissional" / "Jornada do Paciente")
  └── Desafio final (tipo "chefe"): 1 questão de cada tema, exige 80%
 ```
 
-- Cada missão só desbloqueia depois que a anterior é concluída (70% de acerto).
+- Cada missão só desbloqueia depois que a anterior é concluída (60% de acerto: 2 de 3 ou 3 de 4).
 - XP: 10 por acerto (20 no desafio final) + 50 ao concluir (150 no desafio). Nível = 1 + XP ÷ 200.
 - Rejogar uma missão concluída é permitido, mas não dá XP de novo.
 - O jogador é a mesma `sessao` anônima do navegador. Cada resposta do jogo também é gravada em `respostas`, então o `/dashboard` e o CSV continuam completos.

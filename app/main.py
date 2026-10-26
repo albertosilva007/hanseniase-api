@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
 from .database import Base, SessionLocal, engine
-from .missoes import gera_missoes
+from .missoes import ajusta_pct_minimo, gera_missoes
 from .routers import admin, jogo, publico
 from .seed import carrega_questoes, garante_admin
 
@@ -24,6 +24,7 @@ async def lifespan(app: FastAPI):
         if settings.seed_on_startup:
             carrega_questoes(db)
             gera_missoes(db)  # só gera se ainda não houver trilhas
+        ajusta_pct_minimo(db)
     yield
 
 
@@ -48,6 +49,11 @@ def pagina_quiz():
 @app.get("/admin", include_in_schema=False)
 def pagina_admin():
     return FileResponse(STATIC / "admin.html")
+
+
+@app.get("/jogo", include_in_schema=False)
+def pagina_jogo():
+    return FileResponse(STATIC / "jogo.html")
 
 
 @app.get("/dashboard", include_in_schema=False)

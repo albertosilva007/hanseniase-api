@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jornada Hanseníase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="/static/app.css">
+<style>
+:root{--gold:#A4710F;--gold-soft:#FBF1DC}
+@media (prefers-color-scheme: dark){:root{--gold:#E8B85A;--gold-soft:#33280F}}
+header.top{padding-block:28px 8px}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+
+/* HUD do jogador */
+.hud{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.hud .wrap{padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:.9rem}
+.lvl{display:flex;align-items:center;gap:10px;flex:1 1 220px;min-width:0}
+.lvl .badge{flex:none;width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.05rem}
+.lvl .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.lvl .info span{color:var(--muted);font-variant-numeric:tabular-nums}
+.lvl .info b{color:var(--ink)}
+.xpbar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.xpbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s}
+.stat{display:flex;align-items:center;gap:6px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat b{color:var(--ink)}
+.stat svg{width:18px;height:18px;flex:none}
+
+main{padding-block:24px 56px;display:flex;flex-direction:column;gap:20px}
+h2.sec{font-size:1.35rem;margin:0}
+.back{align-self:flex-start}
+
+/* Escolha de trilha */
+.trilhas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.trilha{text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .15s}
+.trilha:hover{border-color:var(--accent);transform:translateY(-2px)}
+.trilha h3{margin:0;font-size:1.2rem}
+.trilha p{margin:0;color:var(--muted);font-size:.94rem}
+.prog{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.prog .xpbar{flex:1}
+.prog .xpbar i{background:var(--ok)}
+
+/* Mapa de missões */
+.mapa{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;position:relative}
+.mapa::before{content:"";position:absolute;left:27px;top:28px;bottom:28px;width:3px;background:var(--line);border-radius:2px}
+.no{position:relative;display:flex;gap:14px;align-items:center;padding:8px 0}
+.no .pin{position:relative;z-index:1;flex:none;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--line);background:var(--surface);color:var(--muted);font-family:var(--f-display);font-weight:800;font-size:1.1rem}
+.no .pin svg{width:24px;height:24px}
+.no .box{flex:1;min-width:0;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:3px;cursor:pointer;transition:border-color .15s}
+.no .box:hover:not(:disabled){border-color:var(--accent)}
+.no .box:disabled{cursor:default}
+.no .box b{font-family:var(--f-display);font-size:1.02rem}
+.no .box small{color:var(--muted);font-size:.84rem}
+.no.disponivel .pin,.no.em_andamento .pin{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.no.disponivel .box,.no.em_andamento .box{border-color:var(--accent)}
+.no.concluida .pin{border-color:var(--ok);background:var(--ok);color:var(--surface)}
+.no.falhou .pin{border-color:var(--bad);color:var(--bad);background:var(--bad-soft)}
+.no.bloqueada{opacity:.55}
+.no.chefe .pin{border-radius:14px;transform:rotate(45deg)}
+.no.chefe .pin > *{transform:rotate(-45deg)}
+.no.chefe.disponivel .pin{border-color:var(--gold);color:var(--gold);background:var(--gold-soft)}
+.tag{align-self:flex-start;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}.tag.bad{background:var(--bad-soft);color:var(--bad)}.tag.gold{background:var(--gold-soft);color:var(--gold)}
+
+/* Jogando */
+.play{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.play-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.play-head h2{margin:0;font-size:1.15rem}
+.passos{display:flex;gap:6px}
+.passos i{width:22px;height:8px;border-radius:4px;background:var(--line)}
+.passos i.ok{background:var(--ok)}.passos i.bad{background:var(--bad)}.passos i.atual{background:var(--accent)}
+.narr{margin:0;padding:12px 14px;border-radius:10px;background:var(--accent-soft);color:var(--ink);font-size:.95rem}
+.play h3{font-family:var(--f-body);font-weight:700;font-size:1.14rem;line-height:1.4;margin:0;text-wrap:pretty}
+.opts{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.opt{width:100%;display:flex;gap:12px;align-items:flex-start;text-align:left;font:inherit;font-size:.98rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;cursor:pointer;transition:border-color .15s}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt .l{flex:none;width:1.7em;height:1.7em;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.opt.right{background:var(--ok-soft);border-color:var(--ok)}.opt.right .l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}.opt.wrong .l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opt.dim{opacity:.55}
+.fb{border-top:1px dashed var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.fb p{margin:0;font-size:.96rem}
+.fb .v{font-weight:700}.fb .v.ok{color:var(--ok)}.fb .v.bad{color:var(--bad)}
+.fb .xp{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
+.acoes{display:flex;flex-wrap:wrap;gap:10px}
+
+/* Resultado */
+.res{text-align:center;align-items:center}
+.res .big{font-family:var(--f-display);font-weight:800;font-size:3rem;line-height:1;font-variant-numeric:tabular-nums}
+.res .big.ok{color:var(--ok)}.res .big.bad{color:var(--bad)}
+.res p{margin:0;max-width:52ch}
+.medalha{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 18px;border-radius:14px;background:var(--gold-soft);color:var(--gold);font-weight:700}
+.medalha svg{width:40px;height:40px}
+.res .acoes{justify-content:center}
+
+/* Insígnias */
+.insignias{display:flex;flex-wrap:wrap;gap:8px}
+.insignias span{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--gold-soft);color:var(--gold);font-size:.84rem;font-weight:700}
+.insignias svg{width:14px;height:14px}
+.vazio{color:var(--muted);font-size:.92rem;margin:0}
+.empty{text-align:center;color:var(--muted);padding:40px 0}
+footer{border-top:1px solid var(--line);padding-block:20px 40px;color:var(--muted);font-size:.86rem}
+footer p{margin:0 0 6px;max-width:68ch}
+@media (max-width:520px){.play{padding:16px 14px}.res .big{font-size:2.5rem}}
+</style>
+</head>
+<body>
+<nav class="wrap topnav" aria-label="Navegação">
+  <a href="/">Banco de questões</a>
+  <a href="/jogo" aria-current="page">Jornada (jogo)</a>
+</nav>
+
+<header class="top wrap">
+  <div class="eyebrow">Modo jogo</div>
+  <h1>Jornada Hanseníase</h1>
+  <p class="lede">Complete missões, ganhe XP e conquiste insígnias. Cada missão desbloqueia a próxima.</p>
+</header>
+
+<div class="hud" aria-label="Seu progresso"><div class="wrap" id="hud">
+  <div class="lvl"><div class="badge">1</div><div class="info"><span>Carregando…</span><div class="xpbar"><i></i></div></div></div>
+</div></div>
+
+<main class="wrap" id="tela" aria-live="polite"><p class="empty">Carregando…</p></main>
+
+<footer class="wrap">
+  <p>Conteúdo educativo baseado no PCDT da Hanseníase (Ministério da Saúde, 2022) e no Guia Prático sobre a Hanseníase (MS, 2017). Não substitui a avaliação de um profissional de saúde.</p>
+  <p>Hanseníase tem cura, e o tratamento é gratuito no SUS.</p>
+</footer>
+
+<script>
+const API = "";  // mesma origem
+const L = "ABCDEF";
+const XP_NIVEL = 200;
+const ls = {get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+// mesma sessão anônima do banco de questões
+let sessao = ls.get("hq-sessao", null);
+if(!sessao){ sessao = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())+Math.random().toString(16).slice(2)); ls.set("hq-sessao", sessao); }
+
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s ?? "").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pct = x=>Math.round(x*100)+"%";
+
+const ICO = {
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2L2.9 9.4l6.3-.9z"/></svg>',
+  fire:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4 0 7-2.7 7-6.6 0-3.6-2.6-6.3-4.3-8.4-.4 2.2-1.5 3.6-2.7 4.2C12 7.7 10.6 5 8.6 3c.2 3-1.6 5.2-2.8 7A7.6 7.6 0 0 0 5 14.4C5 18.3 8 21 12 21z"/></svg>',
+  medal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14.5" r="5.5"/><path d="M8.5 9.8L6 3h4l2 4 2-4h4l-2.5 6.8"/><path d="M12 12.3l.8 1.6 1.7.2-1.2 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.2 1.7-.2z" fill="currentColor" stroke="none"/></svg>',
+  crown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17h16l1-10-5 4-4-6-4 6-5-4z"/></svg>',
+};
+
+const st = {perfil:null, trilha:null, missoes:[], missao:null, etapa:null, passos:[], ultima:null};
+
+async function api(path, opts={}){
+  const r = await fetch(API+path, {headers:{"Content-Type":"application/json"}, ...opts});
+  if(!r.ok){ let m="Algo deu errado. Tente de novo."; try{ m=(await r.json()).detail||m }catch(e){} throw new Error(m); }
+  return r.json();
+}
+function erro(e){ $("#tela").insertAdjacentHTML("afterbegin", `<p class="alert" role="alert">${esc(e.message||e)}</p>`); }
+
+/* ---------- HUD ---------- */
+async function atualizaHud(){
+  try{ st.perfil = await api(`/api/jogo/jogador/${encodeURIComponent(sessao)}`); }catch(e){ return; }
+  const p = st.perfil, base = (p.nivel-1)*XP_NIVEL, prog = (p.xp_total-base)/XP_NIVEL*100;
+  $("#hud").innerHTML = `
+    <div class="lvl"><div class="badge" aria-label="Nível ${p.nivel}">${p.nivel}</div>
+      <div class="info"><span>Nível <b>${p.nivel}</b> · <b>${p.xp_total}</b> XP · faltam ${p.xp_proximo_nivel} para o próximo</span>
+      <div class="xpbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(prog)}"><i style="width:${prog}%"></i></div></div></div>
+    <span class="stat" title="Dias seguidos jogando">${ICO.fire}<b>${p.sequencia_dias}</b> ${p.sequencia_dias===1?"dia":"dias"}</span>
+    <span class="stat" title="Insígnias">${ICO.medal}<b>${p.insignias.length}</b> ${p.insignias.length===1?"insígnia":"insígnias"}</span>`;
+}
+
+/* ---------- Tela 1: escolher trilha ---------- */
+async function telaTrilhas(){
+  st.trilha = null; history.replaceState(null,"","/jogo");
+  try{
+    const ts = await api(`/api/jogo/trilhas?sessao=${encodeURIComponent(sessao)}`);
+    const ins = st.perfil?.insignias || [];
+    $("#tela").innerHTML = `
+      <h2 class="sec">Escolha sua jornada</h2>
+      <div class="trilhas">${ts.map(t=>`
+        <button type="button" class="trilha" data-trilha="${t.id}">
+          <span class="chip ${t.publico}">${t.publico==="prof"?"Profissionais":"Pacientes e comunidade"}</span>
+          <h3>${esc(t.titulo)}</h3><p>${esc(t.descricao)}</p>
+          <span class="prog"><span class="xpbar"><i style="width:${t.total_missoes?t.concluidas/t.total_missoes*100:0}%"></i></span>${t.concluidas}/${t.total_missoes} missões</span>
+        </button>`).join("")}</div>
+      <h2 class="sec">Suas insígnias</h2>
+      ${ins.length?`<div class="insignias">${ins.map(i=>`<span>${ICO.star}${esc(i)}</span>`).join("")}</div>`:'<p class="vazio">Conclua uma missão para ganhar sua primeira insígnia.</p>'}`;
+  }catch(e){ $("#tela").innerHTML=""; erro(e); }
+}
+
+/* ---------- Tela 2: mapa de missões ---------- */
+const ROTULO = {bloqueada:"Bloqueada", disponivel:"Disponível", em_andamento:"Em andamento", concluida:"Concluída", falhou:"Tente de novo"};
+async function telaMapa(tid){
+  st.trilha = tid; history.replaceState(null,"",`/jogo#t${tid}`);
+  try{
+    const [ts, ms] = await Promise.all([api(`/api/jogo/trilhas?sessao=${encodeURIComponent(sessao)}`),
+                                        api(`/api/jogo/trilhas/${tid}/missoes?sessao=${encodeURIComponent(sessao)}`)]);
+    st.missoes = ms;
+    const t = ts.find(x=>x.id===tid) || {titulo:"Jornada"};
+    $("#tela").innerHTML = `
+      <button type="button" class="link back" data-voltar="trilhas">← Todas as jornadas</button>
+      <h2 class="sec">${esc(t.titulo)}</h2>
+      <ol class="mapa">${ms.map((m,i)=>{
+        const chefe = m.tipo==="chefe", trava = m.status==="bloqueada";
+        const pin = m.status==="concluida" ? ICO.check : trava ? ICO.lock : chefe ? ICO.crown : `<span>${i+1}</span>`;
+        const tagCls = m.status==="concluida"?"ok":m.status==="falhou"?"bad":chefe?"gold":"";
+        const det = `${m.total_etapas} ${m.total_etapas===1?"pergunta":"perguntas"} · ${m.xp_recompensa} XP · mínimo ${pct(m.pct_minimo)}` + (m.melhor_pct!=null?` · melhor: ${pct(m.melhor_pct)}`:"");
+        return `<li class="no ${m.status}${chefe?" chefe":""}"><span class="pin" aria-hidden="true">${pin}</span>
+          <button type="button" class="box" data-missao="${m.id}"${trava?" disabled":""} aria-label="${esc(m.titulo)}: ${ROTULO[m.status]}">
+            <span class="tag ${tagCls}">${chefe&&!trava&&m.status!=="concluida"?"Desafio final":ROTULO[m.status]}</span>
+            <b>${esc(m.titulo)}</b><small>${trava?"Conclua a missão anterior para liberar":det}</small></button></li>`;
+      }).join("")}</ol>`;
+  }catch(e){ $("#tela").innerHTML=""; erro(e); }
+}
+
+/* ---------- Tela 3: jogando ---------- */
+async function abrirMissao(mid){
+  const m = st.missoes.find(x=>x.id===mid); st.missao = m;
+  try{
+    if(m.status==="em_andamento"){            // retoma de onde parou
+      const e = await api(`/api/jogo/missoes/${mid}/etapa?sessao=${encodeURIComponent(sessao)}`);
+      st.passos = Array(e.etapa-1).fill("feito");
+      mostraEtapa(e, null);
+    } else {
+      const r = await api(`/api/jogo/missoes/${mid}/iniciar`, {method:"POST", body:JSON.stringify({sessao})});
+      st.passos = [];
+      mostraEtapa(r.etapa, r.narrativa_inicio);
+    }
+  }catch(e){ erro(e); }
+}
+
+function passosHtml(total, atual){
+  return `<span class="passos" aria-label="Pergunta ${atual} de ${total}">${Array.from({length:total},(_,i)=>{
+    const s = st.passos[i]; return `<i class="${s==="ok"?"ok":s==="bad"?"bad":s==="feito"?"ok":i===atual-1?"atual":""}"></i>`;}).join("")}</span>`;
+}
+
+function mostraEtapa(e, narrativa){
+  st.etapa = e;
+  $("#tela").innerHTML = `
+    <button type="button" class="link back" data-voltar="mapa">← Voltar ao mapa</button>
+    <section class="play">
+      <div class="play-head"><h2>${esc(st.missao.titulo)}</h2>${passosHtml(e.total_etapas, e.etapa)}</div>
+      ${narrativa?`<p class="narr">${esc(narrativa)}</p>`:""}
+      ${e.contexto?`<p class="narr">${esc(e.contexto)}</p>`:""}
+      <h3>${esc(e.enunciado)}</h3>
+      <ol class="opts">${e.opcoes.map((t,i)=>`<li><button type="button" class="opt" data-op="${i}"><span class="l">${L[i]}</span><span>${esc(t)}</span></button></li>`).join("")}</ol>
+      <div id="fb"></div>
+    </section>`;
+  $(".opt")?.focus({preventScroll:true});
+}
+
+async function responder(i){
+  const bts = document.querySelectorAll(".opt"); bts.forEach(b=>b.disabled=true);
+  let r;
+  try{ r = await api(`/api/jogo/missoes/${st.missao.id}/responder`, {method:"POST", body:JSON.stringify({sessao, escolha:i})}); }
+  catch(e){ bts.forEach(b=>b.disabled=false); erro(e); return; }
+  st.ultima = r;
+  bts.forEach((b,k)=>{ b.classList.add(k===r.correta?"right":k===i?"wrong":"dim"); });
+  st.passos[st.etapa.etapa-1] = r.acertou ? "ok" : "bad";
+  $(".passos").outerHTML = passosHtml(st.etapa.total_etapas, st.etapa.etapa);
+  const xpEtapa = r.resultado ? r.xp_ganho - r.resultado.xp_conclusao : r.xp_ganho;
+  $("#fb").innerHTML = `<div class="fb">
+    <p class="v ${r.acertou?"ok":"bad"}">${r.acertou?"Correto!":`Resposta certa: ${L[r.correta]}`} ${xpEtapa?`<span class="xp">+${xpEtapa} XP</span>`:""}</p>
+    <p>${esc(r.explicacao)}</p>
+    <div class="acoes"><button type="button" class="btn" id="seguir">${r.resultado?"Ver resultado":"Próxima pergunta"}</button></div></div>`;
+  $("#seguir").focus();
+  atualizaHud();
+}
+
+function seguir(){
+  const r = st.ultima;
+  if(r.proxima_etapa) mostraEtapa(r.proxima_etapa, null);
+  else telaResultado(r);
+}
+
+/* ---------- Tela 4: resultado ---------- */
+function telaResultado(r){
+  const res = r.resultado, venceu = res.status==="concluida";
+  $("#tela").innerHTML = `
+    <section class="play res">
+      <span class="tag ${venceu?"ok":"bad"}">${venceu?"Missão concluída":"Ainda não foi desta vez"}</span>
+      <h2 style="margin:0">${esc(st.missao.titulo)}</h2>
+      <div class="big ${venceu?"ok":"bad"}">${res.acertos}/${res.total_etapas}</div>
+      <p class="muted">${pct(res.pct)} de acerto · mínimo para passar: ${pct(res.pct_minimo)}</p>
+      ${venceu&&res.narrativa_fim?`<p>${esc(res.narrativa_fim)}</p>`:""}
+      ${!venceu?`<p>Revise as explicações e tente de novo. Você precisa acertar ${Math.ceil(res.pct_minimo*res.total_etapas)} de ${res.total_etapas}.</p>`:""}
+      ${res.xp_conclusao?`<p class="xp" style="color:var(--accent);font-weight:700">+${res.xp_conclusao} XP pela conclusão</p>`:""}
+      ${venceu&&!res.xp_conclusao?`<p class="muted">Missão já concluída antes: treino sem XP extra.</p>`:""}
+      ${res.insignia_nova?`<div class="medalha">${ICO.medal}<span>Nova insígnia: ${esc(res.insignia_nova)}</span></div>`:""}
+      ${r.subiu_nivel?`<p class="medalha" style="flex-direction:row">${ICO.star} Você subiu para o nível ${r.nivel}!</p>`:""}
+      <div class="acoes">
+        ${res.proxima_missao_id?`<button type="button" class="btn" data-proxima="${res.proxima_missao_id}">Próxima missão</button>`:""}
+        ${!venceu?`<button type="button" class="btn" data-missao="${st.missao.id}" data-novamente="1">Tentar de novo</button>`:""}
+        <button type="button" class="btn ghost" data-voltar="mapa">Voltar ao mapa</button>
+      </div>
+    </section>`;
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener("click", async e=>{
+  const t = e.target.closest("button"); if(!t || t.disabled) return;
+  if(t.dataset.trilha) return telaMapa(+t.dataset.trilha);
+  if(t.classList.contains("opt")) return responder(+t.dataset.op);
+  if(t.id==="seguir") return seguir();
+  if(t.dataset.voltar==="trilhas"){ await atualizaHud(); return telaTrilhas(); }
+  if(t.dataset.voltar==="mapa") return telaMapa(st.trilha);
+  if(t.dataset.proxima){ await telaMapa(st.trilha); return abrirMissao(+t.dataset.proxima); }
+  if(t.dataset.missao){
+    if(t.dataset.novamente){ await telaMapa(st.trilha); }
+    return abrirMissao(+t.dataset.missao);
+  }
+});
+
+(async()=>{
+  await atualizaHud();
+  const m = location.hash.match(/^#t(\d+)$/);
+  m ? telaMapa(+m[1]) : telaTrilhas();
+})();
+</script>
+</body>
+</html>

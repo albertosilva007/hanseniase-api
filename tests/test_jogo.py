@@ -57,6 +57,14 @@ def test_trilhas_geradas(c):
     assert sum(1 for m in ms if m["tema"] == "Tratamento") == 2
 
 
+def test_pagina_jogo_e_pct_minimo(c):
+    assert c.get("/jogo").status_code == 200
+    pac = _trilha(c, "pac")
+    ms = c.get(f"/api/jogo/trilhas/{pac['id']}/missoes").json()
+    assert all(m["pct_minimo"] == 0.6 for m in ms if m["tipo"] == "quiz")
+    assert ms[-1]["pct_minimo"] == 0.8
+
+
 def test_bloqueio_e_fluxo(c, gabarito):
     pac = _trilha(c, "pac")
     ms = c.get(f"/api/jogo/trilhas/{pac['id']}/missoes?sessao={S}").json()
@@ -83,6 +91,15 @@ def test_bloqueio_e_fluxo(c, gabarito):
     # rejogar não dá XP de novo
     out = _joga(c, ms[0]["id"], gabarito)
     assert out["xp_total"] == 10 * n + 50 and out["resultado"]["insignia_nova"] is None
+
+
+def test_dois_de_tres_passa(c, gabarito):
+    s2 = "sessao-jogo-0002"
+    prof = _trilha(c, "prof")
+    m1 = c.get(f"/api/jogo/trilhas/{prof['id']}/missoes").json()[0]
+    assert m1["total_etapas"] == 3
+    out = _joga(c, m1["id"], gabarito, errar=1, sessao=s2)
+    assert out["resultado"]["status"] == "concluida" and out["resultado"]["acertos"] == 2
 
 
 def test_etapa_atual_e_validacoes(c, gabarito):
