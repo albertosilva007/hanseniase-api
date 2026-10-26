@@ -1,13 +1,14 @@
 import csv
 import io
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy import Integer, case, cast, func, select
 from sqlalchemy.orm import Session
 
 from ..auth import admin_atual, confere_senha, cria_token
 from ..database import get_db
+from ..missoes import gera_missoes
 from ..models import Questao, Resposta, Usuario
 from ..schemas import Login, QuestaoAdmin, QuestaoAtualizar, QuestaoCriar, Token
 
@@ -62,6 +63,14 @@ def excluir(qid: int, db: Session = Depends(get_db)):
         raise HTTPException(404, "Questão não encontrada")
     db.delete(q)
     db.commit()
+
+
+# ---------- Missões ----------
+@router.post("/admin/missoes/gerar", dependencies=protegido)
+def gerar_missoes(recriar: bool = Query(False, description="true = apaga as trilhas atuais e gera de novo"),
+                  db: Session = Depends(get_db)):
+    """Converte as questões ativas em trilhas/missões. Use recriar=true depois de cadastrar questões novas."""
+    return gera_missoes(db, recriar=recriar)
 
 
 # ---------- Estatísticas ----------
