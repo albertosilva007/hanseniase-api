@@ -52,6 +52,33 @@ docker compose up --build
 - `GET /api/admin/stats`: totais, por público, por tema, por questão e por dia
 - `GET /api/admin/respostas.csv`: todas as respostas, para análise em pandas ou Power BI
 
+## Modo jogo (missões)
+
+As questões viram **missões** agrupadas em **trilhas**, sem mudar a tabela `questoes`:
+
+```
+Trilha (1 por público: "Jornada do Profissional" / "Jornada do Paciente")
+ └── Missão (1 por tema, em ordem pedagógica; tema com mais de 4 questões vira "Parte 1/2")
+      └── Etapa → aponta para uma questão
+ └── Desafio final (tipo "chefe"): 1 questão de cada tema, exige 80%
+```
+
+- Cada missão só desbloqueia depois que a anterior é concluída (70% de acerto).
+- XP: 10 por acerto (20 no desafio final) + 50 ao concluir (150 no desafio). Nível = 1 + XP ÷ 200.
+- Rejogar uma missão concluída é permitido, mas não dá XP de novo.
+- O jogador é a mesma `sessao` anônima do navegador. Cada resposta do jogo também é gravada em `respostas`, então o `/dashboard` e o CSV continuam completos.
+- Na primeira subida as trilhas são geradas sozinhas. Depois de cadastrar questões novas, rode `POST /api/admin/missoes/gerar?recriar=true` (isso zera o progresso nas missões, mas mantém XP e insígnias).
+- Os textos de narrativa saem como placeholder em `app/missoes.py`: revisar com a equipe.
+
+**Endpoints** (`/api/jogo`)
+- `GET /trilhas?publico=&sessao=`: trilhas com total de missões e quantas o jogador concluiu
+- `GET /trilhas/{id}/missoes?sessao=`: missões com status `bloqueada | disponivel | em_andamento | concluida | falhou`
+- `POST /missoes/{id}/iniciar` `{sessao}`: começa (ou recomeça) e devolve a 1ª etapa, sem gabarito
+- `GET /missoes/{id}/etapa?sessao=`: etapa atual (para retomar depois de recarregar a página)
+- `POST /missoes/{id}/responder` `{sessao, escolha}`: corrige e devolve XP, nível e a próxima etapa ou o resultado final
+- `GET /jogador/{sessao}`: XP, nível, XP até o próximo nível, sequência de dias e insígnias
+- Admin: `POST /api/admin/missoes/gerar?recriar=true|false`
+
 ## Dados coletados
 
 Cada resposta grava a questão, a alternativa escolhida, se acertou, a data e um **identificador anônimo de sessão** gerado no navegador. Não há nome, e-mail nem IP. Se os dados entrarem na pesquisa, confirme com o comitê de ética se o TCLE precisa cobrir essa coleta.

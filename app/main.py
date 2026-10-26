@@ -8,7 +8,8 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
 from .database import Base, SessionLocal, engine
-from .routers import admin, publico
+from .missoes import gera_missoes
+from .routers import admin, jogo, publico
 from .seed import carrega_questoes, garante_admin
 
 STATIC = Path(__file__).parent / "static"
@@ -22,6 +23,7 @@ async def lifespan(app: FastAPI):
         garante_admin(db)
         if settings.seed_on_startup:
             carrega_questoes(db)
+            gera_missoes(db)  # só gera se ainda não houver trilhas
     yield
 
 
@@ -30,6 +32,7 @@ app.add_middleware(CORSMiddleware, allow_origins=settings.cors_list, allow_metho
                    allow_headers=["*"], allow_credentials=False)
 app.include_router(publico.router)
 app.include_router(admin.router)
+app.include_router(jogo.router)
 
 
 @app.get("/api/health", tags=["infra"])

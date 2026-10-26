@@ -72,3 +72,93 @@ class Login(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+# ===================== JOGO (missões) =====================
+Sessao = Field(min_length=8, max_length=64)
+
+
+class SessaoIn(BaseModel):
+    sessao: str = Sessao
+
+
+class RespostaEtapaIn(BaseModel):
+    sessao: str = Sessao
+    escolha: int = Field(ge=0)
+
+
+class TrilhaOut(BaseModel):
+    id: int
+    publico: Publico
+    titulo: str
+    descricao: str
+    total_missoes: int
+    concluidas: int
+
+
+class MissaoOut(BaseModel):
+    id: int
+    trilha_id: int
+    titulo: str
+    tema: str | None
+    tipo: str
+    ordem: int
+    total_etapas: int
+    pct_minimo: float
+    xp_recompensa: int
+    insignia: str | None
+    status: Literal["bloqueada", "disponivel", "em_andamento", "concluida", "falhou"]
+    melhor_pct: float | None = None
+
+
+class EtapaOut(BaseModel):
+    """Questão da etapa atual, SEM gabarito."""
+    missao_id: int
+    etapa: int  # 1-based
+    total_etapas: int
+    contexto: str
+    questao_id: int
+    tema: str
+    enunciado: str
+    opcoes: list[str]
+
+
+class InicioMissaoOut(BaseModel):
+    missao_id: int
+    titulo: str
+    narrativa_inicio: str
+    etapa: EtapaOut
+
+
+class ResultadoMissao(BaseModel):
+    status: Literal["concluida", "falhou"]
+    acertos: int
+    total_etapas: int
+    pct: float
+    pct_minimo: float
+    xp_conclusao: int
+    insignia_nova: str | None = None
+    narrativa_fim: str | None = None
+    proxima_missao_id: int | None = None
+
+
+class RespostaEtapaOut(BaseModel):
+    acertou: bool
+    correta: int
+    explicacao: str
+    xp_ganho: int
+    xp_total: int
+    nivel: int
+    subiu_nivel: bool
+    proxima_etapa: EtapaOut | None = None
+    resultado: ResultadoMissao | None = None
+
+
+class JogadorOut(BaseModel):
+    sessao: str
+    xp_total: int
+    nivel: int
+    xp_proximo_nivel: int
+    sequencia_dias: int
+    insignias: list[str]
+    missoes_concluidas: int
