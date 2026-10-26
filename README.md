@@ -7,6 +7,8 @@ Back end em **FastAPI + PostgreSQL** para o banco de questões sobre hanseníase
 | `/` | Página pública: praticar ou ler as questões |
 | `/admin` | Painel da equipe: login e cadastro/edição de questões |
 | `/dashboard` | Estatísticas de acerto e exportação CSV |
+| `/admin/banco` | Banco de dados cru (somente leitura): todas as tabelas, paginadas, com CSV |
+| `/jogo` | Modo jogo: jornadas, missões, XP e insígnias |
 | `/docs` | Documentação interativa da API (Swagger) |
 
 Na primeira subida, o sistema cria o usuário admin (a partir das variáveis de ambiente) e carrega as 42 questões iniciais de `app/data/questoes_seed.json`.
@@ -50,6 +52,8 @@ docker compose up --build
 - `POST /api/auth/login` `{email, senha}` → `{access_token}`
 - `GET/POST /api/admin/questoes`, `PUT/DELETE /api/admin/questoes/{id}`
 - `GET /api/admin/stats`: totais, por público, por tema, por questão e por dia
+- `GET /api/admin/banco` e `GET /api/admin/banco/{tabela}?limite=&pagina=`: dados crus, só leitura (sem hash de senha)
+- `GET /api/admin/banco/{tabela}/csv`: tabela inteira em CSV
 - `GET /api/admin/respostas.csv`: todas as respostas, para análise em pandas ou Power BI
 
 ## Modo jogo (missões)

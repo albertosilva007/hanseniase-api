@@ -1,5 +1,6 @@
 import csv
 import io
+import json
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
@@ -71,6 +72,66 @@ def gerar_missoes(recriar: bool = Query(False, description="true = apaga as tril
                   db: Session = Depends(get_db)):
     """Converte as questões ativas em trilhas/missões. Use recriar=true depois de cadastrar questões novas."""
     return gera_missoes(db, recriar=recriar)
+
+
+# ---------- Banco cru (somente leitura) ----------
+# Lista fechada de tabelas: nada de SQL livre vindo do navegador.
+# Colunas sensíveis nunca saem (ex.: hash de senha).
+TABELAS_BANCO = ["questoes", "respostas", "trilhas", "missoes", "missao_etapas",
+                 "jogadores", "progresso_missoes", "insignias_jogador", "usuarios"]
+OCULTAS = {"usuarios": {"senha_hash"}}
+
+
+def _tabela(nome: str):
+    from ..database import Base
+    if nome not in TABELAS_BANCO or nome not in Base.metadata.tables:
+        raise HTTPException(404, "Tabela não encontrada")
+    t = Base.metadata.tables[nome]
+    cols = [c for c in t.columns if c.name not in OCULTAS.get(nome, set())]
+    return t, cols
+
+
+def _valor(v):
+    if v is None or isinstance(v, (int, float, bool, str, list, dict)):
+        return v
+    return v.isoformat() if hasattr(v, "isoformat") else str(v)
+
+
+@router.get("/admin/banco", dependencies=protegido)
+def banco_tabelas(db: Session = Depends(get_db)):
+    """Tabelas disponíveis e quantas linhas cada uma tem."""
+    out = []
+    for nome in TABELAS_BANCO:
+        t, cols = _tabela(nome)
+        out.append({"tabela": nome, "linhas": db.scalar(select(func.count()).select_from(t)),
+                    "colunas": [c.name for c in cols]})
+    return out
+
+
+@router.get("/admin/banco/{nome}", dependencies=protegido)
+def banco_linhas(nome: str, limite: int = Query(100, ge=1, le=1000), pagina: int = Query(1, ge=1),
+                 db: Session = Depends(get_db)):
+    """Linhas cruas de uma tabela, paginadas, mais recentes primeiro."""
+    t, cols = _tabela(nome)
+    total = db.scalar(select(func.count()).select_from(t))
+    pk = list(t.primary_key.columns)
+    st = select(*cols).order_by(*[c.desc() for c in pk]).limit(limite).offset((pagina - 1) * limite)
+    linhas = [[_valor(v) for v in row] for row in db.execute(st)]
+    return {"tabela": nome, "colunas": [c.name for c in cols], "total": total,
+            "pagina": pagina, "limite": limite, "linhas": linhas}
+
+
+@router.get("/admin/banco/{nome}/csv", dependencies=protegido)
+def banco_csv(nome: str, db: Session = Depends(get_db)):
+    t, cols = _tabela(nome)
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow([c.name for c in cols])
+    for row in db.execute(select(*cols).order_by(*t.primary_key.columns)):
+        w.writerow([json.dumps(v, ensure_ascii=False) if isinstance(v, (list, dict)) else _valor(v) for v in row])
+    buf.seek(0)
+    return StreamingResponse(iter([buf.getvalue()]), media_type="text/csv",
+                             headers={"Content-Disposition": f"attachment; filename={nome}.csv"})
 
 
 # ---------- Estatísticas ----------

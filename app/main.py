@@ -56,6 +56,11 @@ def pagina_jogo():
     return FileResponse(STATIC / "jogo.html")
 
 
+@app.get("/admin/banco", include_in_schema=False)
+def pagina_banco():
+    return FileResponse(STATIC / "banco.html")
+
+
 @app.get("/dashboard", include_in_schema=False)
 def pagina_dashboard():
     return FileResponse(STATIC / "dashboard.html")

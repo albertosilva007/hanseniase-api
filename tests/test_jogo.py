@@ -133,3 +133,20 @@ def test_admin_regenera(c, auth):
     assert r["trilhas"] == 2 and r["missoes"] > 10
     # progresso de missão zera, XP e insígnias ficam
     assert c.get(f"/api/jogo/jogador/{S}").json()["insignias"] == ["Transmissão"]
+
+
+def test_banco_cru(c, auth):
+    assert c.get("/admin/banco").status_code == 200
+    assert c.get("/api/admin/banco").status_code == 401
+    ts = {t["tabela"]: t for t in c.get("/api/admin/banco", headers=auth).json()}
+    assert {"questoes", "respostas", "missoes", "jogadores", "usuarios"} <= set(ts)
+    assert "senha_hash" not in ts["usuarios"]["colunas"]
+    d = c.get("/api/admin/banco/missoes?limite=5", headers=auth).json()
+    assert d["total"] == ts["missoes"]["linhas"] and len(d["linhas"]) == 5
+    assert len(d["linhas"][0]) == len(d["colunas"])
+    q = c.get("/api/admin/banco/questoes?limite=1", headers=auth).json()
+    assert isinstance(q["linhas"][0][q["colunas"].index("opcoes")], list)  # JSON sai como lista
+    assert c.get("/api/admin/banco/pg_user", headers=auth).status_code == 404  # fora da lista
+    csv = c.get("/api/admin/banco/questoes/csv", headers=auth)
+    assert csv.status_code == 200 and csv.text.splitlines()[0].startswith("id,")
+    assert "senha_hash" not in c.get("/api/admin/banco/usuarios/csv", headers=auth).text
