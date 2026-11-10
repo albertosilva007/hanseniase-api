@@ -56,6 +56,14 @@ docker compose up --build
 - `GET /api/admin/banco/{tabela}/csv`: tabela inteira em CSV
 - `GET /api/admin/respostas.csv`: todas as respostas, para análise em pandas ou Power BI
 
+## Esqueci a senha do admin
+
+A senha do admin fica gravada no banco; mudar só o `ADMIN_PASSWORD` não altera o login. Para redefinir:
+
+1. No Render, serviço `hanseniase-api` → **Environment**: coloque a nova senha em `ADMIN_PASSWORD` e crie `ADMIN_RESET_PASSWORD` = `true`.
+2. Salve (o Render faz o redeploy) e entre em `/admin` com `ADMIN_EMAIL` + a nova senha.
+3. Volte `ADMIN_RESET_PASSWORD` para `false` (ou apague a variável).
+
 ## Modo jogo (missões)
 
 As questões viram **missões** agrupadas em **trilhas**, sem mudar a tabela `questoes`:

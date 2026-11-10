@@ -66,3 +66,24 @@ def test_stats_e_csv(c, auth):
     assert s["sessoes"] == 2 and len(s["por_dia"]) == 1
     csv = c.get("/api/admin/respostas.csv", headers=auth)
     assert csv.status_code == 200 and csv.text.count("\n") == 3
+
+
+def test_reset_senha_admin(monkeypatch):
+    from app.config import get_settings
+    from app.database import SessionLocal
+    from app.seed import garante_admin
+    from app.auth import confere_senha as verifica_senha
+    from app.models import Usuario
+    from sqlalchemy import select
+    s = get_settings()
+    email = s.admin_email.strip().lower()
+    with SessionLocal() as db:
+        garante_admin(db)
+        monkeypatch.setattr(s, "admin_password", "nova-senha-123")
+        garante_admin(db)  # sem a flag: não muda
+        u = db.scalar(select(Usuario).where(Usuario.email == email))
+        assert not verifica_senha("nova-senha-123", u.senha_hash)
+        monkeypatch.setattr(s, "admin_reset_password", True)
+        garante_admin(db)  # com a flag: muda
+        db.refresh(u)
+        assert verifica_senha("nova-senha-123", u.senha_hash)

@@ -14,8 +14,13 @@ SEED = Path(__file__).parent / "data" / "questoes_seed.json"
 def garante_admin(db: Session) -> None:
     s = get_settings()
     email = s.admin_email.strip().lower()
-    if not db.scalar(select(Usuario).where(Usuario.email == email)):
+    u = db.scalar(select(Usuario).where(Usuario.email == email))
+    if not u:
         db.add(Usuario(email=email, senha_hash=hash_senha(s.admin_password)))
+        db.commit()
+    elif s.admin_reset_password:
+        # recuperação de acesso: ADMIN_RESET_PASSWORD=true no Render
+        u.senha_hash = hash_senha(s.admin_password)
         db.commit()
 
 

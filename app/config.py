@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     access_token_minutes: int = 60 * 8
     admin_email: str = "admin@example.com"
     admin_password: str = "admin123"
+    # true = na subida, grava ADMIN_PASSWORD como a senha do ADMIN_EMAIL (para recuperar acesso).
+    # Depois de entrar, volte para false.
+    admin_reset_password: bool = False
     cors_origins: str = "*"  # lista separada por vírgula
     seed_on_startup: bool = True
 
