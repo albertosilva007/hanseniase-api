@@ -87,3 +87,8 @@ def test_reset_senha_admin(monkeypatch):
         garante_admin(db)  # com a flag: muda
         db.refresh(u)
         assert verifica_senha("nova-senha-123", u.senha_hash)
+        # devolve a senha original para não afetar os outros testes
+        from app.auth import hash_senha
+        monkeypatch.undo()
+        u.senha_hash = hash_senha(get_settings().admin_password)
+        db.commit()
